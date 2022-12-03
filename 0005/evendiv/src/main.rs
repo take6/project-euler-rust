@@ -8,21 +8,22 @@ fn main() {
         11, 12, 13, 14, 15, 16, 17, 18, 19, 20
     ];
 
-    let mut counter: [u64; BASE_NUMBERS.len()] = [0; BASE_NUMBERS.len()];
+    let mut counter: Vec<u64> = vec![0; BASE_NUMBERS.len()];
 
-    for base in BASE_NUMBERS {
-        let factors: Vec<u64> = primes::factors(base.into());
+    BASE_NUMBERS.iter().for_each(|base| {
+        let factors: Vec<u64> = primes::factors((*base).into());
         println!("base {} is factorized into {:?}", base, factors);
-        for elem in BASE_NUMBERS {
-            let counter_index: usize = (elem - 1).try_into().unwrap();
-            let new_count: u64 = cmp::max(
-                counter[counter_index],
-                factors.iter().filter(|x| **x == elem).count()
-                    .try_into().unwrap()
-            );
-            counter[counter_index] = new_count;
-        }
-    }
+        counter = counter.iter()
+            .enumerate()
+            .map(|(counter_index, elem)| {
+                cmp::max(
+                    *elem,
+                    factors.iter().filter(|x| **x == BASE_NUMBERS[counter_index])
+                        .count()
+                        .try_into().unwrap()
+                )
+            }).collect();
+    });
 
     println!("count is {:?}", counter);
 
