@@ -26,12 +26,16 @@ fn main() {
 
     println!("count is {:?}", counter);
 
-    let mut answer: u64 = 1u64;
-    for (index, count) in counter.iter().enumerate() {
-        let base: u64 = (index + 1).try_into().unwrap();
-        answer *= base.pow((*count).try_into().unwrap());
-        // println!("answer {}", answer);
-    }
+    let answer = counter.iter()
+        .enumerate()
+        .filter(|(_, x)| **x > 0)
+        .fold(
+            1u64,
+            |acc, (i, x)| {
+                let base: u64 = (i + 1).try_into().unwrap();
+                acc * base.pow((*x).try_into().unwrap())
+            }
+        );
 
     // "evenly divisible" は商が偶数という意味かと思ったら
     // 違った。単に「割り切れる」という意味らしい。なので、
